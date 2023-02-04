@@ -9,13 +9,12 @@ conn = psycopg2.connect(os.environ['DATABASE_URL'])
 #forecast.csv: contains data from https://open-meteo.com/
 datafile = open("forecast.csv", "r")
 data = csv.reader(datafile, delimiter=",")
-
+datafile.close()
 
 temp = []
 for row in data:
     if row != []:
         temp.append(row)
-print(temp[4:])
 rows = []
 '''parses rows into date, hour, minute, and temperature (converted to farenheuit)'''
 for i in temp[4:]:
@@ -35,7 +34,6 @@ with conn.cursor() as cur:
     cur.execute("SELECT now()")
     res = cur.fetchall()
     conn.commit()
-    print(res)
 
 '''creates table "temps" that stores aforementioned data'''
 cur = conn.cursor()
