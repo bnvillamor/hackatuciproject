@@ -1,6 +1,7 @@
 import psycopg2
 import os 
 import csv
+from datetime import datetime
 #postgresql://justin:NzIK5V7dq4kvObC7IX79-Q@livid-ewe-4867.6wr.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full
 os.environ["DATABASE_URL"] = "postgresql://justin:NzIK5V7dq4kvObC7IX79-Q@livid-ewe-4867.6wr.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full"
 conn = psycopg2.connect(os.environ['DATABASE_URL'])
@@ -9,13 +10,13 @@ conn = psycopg2.connect(os.environ['DATABASE_URL'])
 #forecast.csv: contains data from https://open-meteo.com/
 datafile = open("forecast.csv", "r")
 data = csv.reader(datafile, delimiter=",")
-datafile.close()
 
 temp = []
 for row in data:
     if row != []:
         temp.append(row)
 rows = []
+datafile.close()
 '''parses rows into date, hour, minute, and temperature (converted to farenheuit)'''
 for i in temp[4:]:
     temprow = []
@@ -52,4 +53,8 @@ t = cur.fetchall()
 for i in t:
     print(i)
 
+current_time = datetime.now()
+date, time = str(current_time).split(" ")
+hour, minute, second = time.split(":")
+print(date, hour, minute)
 
